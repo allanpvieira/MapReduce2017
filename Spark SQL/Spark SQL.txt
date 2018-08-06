@@ -1,0 +1,7 @@
+val rddLinhas = sc.textFile("origem")
+val rddPalavras = rddLinhas.flatMap(linha=> linha.toLowerCase().split(" "))
+val df = rddPalavras.toDF("palavra")
+df.registerTempTable("tabela")
+val rddResult = sqlContext.sql("select distinct palavra from tabela order by palavra desc").rdd
+val result = rddResult.map(row=> row(0).toString)
+result.saveAsTextFile("diretorio_saida_ex3");

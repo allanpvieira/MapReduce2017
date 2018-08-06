@@ -1,0 +1,8 @@
+val rddLinhas = sc.textFile("origem")
+val rddPalavras = rddLinhas.flatMap(linha=> linha.split(" "))
+val mapped = rddPalavras.map(palavra=>(palavra.toLowerCase(), 0))
+val reduced = mapped.reduceByKey((v1, v2)=>v1)
+implicit def sortInverso = new Ordering[String] { override def compare (a:String, b:String) = b.compare(a)}
+val ordered = reduced.sortByKey()
+val result = ordered.map{case (palavra, qnt)=> palavra}
+result.saveAsTextFile("diretorio_saida_ex2");
